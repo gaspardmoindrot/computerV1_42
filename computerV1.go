@@ -18,7 +18,7 @@ func suppr_space_poly(poly string) string {
 }
 
 func transform_polynome(poly string) map[float64]float64 {
-	var i, sign, pos, equal int = 0, 1, 0, 0
+	var i, sign, pos, equal, a int = 0, 1, 0, 0, 0
 	var nb1, nb2 float64 = 0, 0
 	var i_prev int = 0
 	var err error
@@ -29,6 +29,9 @@ func transform_polynome(poly string) map[float64]float64 {
 	for i < len(reduce) {
 		if ((reduce[i] == '+' || reduce[i] == '-' || reduce[i] == '=') && pos > 0) {
 			fmt.Println("syntax error : there cannot be two signs in a row")
+			os.Exit(0)
+		} else if (reduce[i] == '=' && equal == 1) {
+			fmt.Println("syntax error : there cannot be two equals in a row")
 			os.Exit(0)
 		}
 		pos = 0
@@ -125,13 +128,20 @@ func transform_polynome(poly string) map[float64]float64 {
 				os.Exit(0)
 			}
 			i--
+			if (equal > 0) {
+				a++
+			}
 			m[nb2] += nb1
 		}
 		i++
 	}
 	if (equal == 0) {
-			fmt.Println("syntax error : we need an equal sign")
-			os.Exit(0)
+		fmt.Println("syntax error : we need an equal sign")
+		os.Exit(0)
+	}
+	if (a == 0) {
+		fmt.Println("syntax error : we need something after the equal sign")
+		os.Exit(0)
 	}
 	return (m)
 }
